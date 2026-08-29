@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sistem Laporan Aktiviti Gereja BWCCDCC</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="wrapper">
+    <!-- REKAAN SIDEBAR -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <h5 class="fw-bold mb-0">Sistem Laporan BWCCDCC</h5>
+      </div>
+      <ul class="list-unstyled components" id="menuList">
+        <li class="active">
+          <a onclick="tukarTab('borangTab', this)"><i class="fa-solid fa-file-pen me-2"></i> Borang Laporan</a>
+        </li>
+        <li>
+          <a onclick="tukarTab('dashboardTab', this)"><i class="fa-solid fa-chart-pie me-2"></i> Dashboard Admin</a>
+        </li>
+        <li id="menuLogKeluar" class="d-none mt-4">
+          <a onclick="logKeluar()" class="text-danger fw-bold"><i class="fa-solid fa-right-from-bracket me-2"></i> Log Keluar</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- KAWASAN KANDUNGAN -->
+    <div id="content">
+      <!-- Butang Toggle Sidebar (Untuk Mobile Sahaja) -->
+      <button type="button" id="sidebarCollapse" class="btn btn-primary d-none mb-3">
+        <i class="fa-solid fa-bars"></i> Menu Pilihan
+      </button>
+
+      <!-- TAB 1: BORANG LAPORAN -->
+      <div id="borangTab" class="tab-content">
+        <div class="container" style="max-width: 800px; margin: 0 auto;">
+          <div class="card p-4 p-md-5">
+            <h3 class="text-center text-primary mb-4 fw-bold">Hantar Laporan Aktiviti</h3>
+            <div id="alertBox" class="alert d-none" role="alert"></div>
+
+            <form id="laporanForm" onsubmit="hantarForm(event)">
+              <div class="section-title">1. Maklumat Am</div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">Cawangan</label>
+                  <select class="form-select" name="cawangan" id="cawanganSelect" onchange="semakCawanganLain(this)" required>
+                    <option value="" disabled selected>Pilih Cawangan</option>
+                    <option value="BWCC Kuala Lumpur">BWCC Kuala Lumpur</option>
+                    <option value="BWCC Shah Alam">BWCC Shah Alam</option>
+                    <option value="BWCC Kota Kinabalu">BWCC Kota Kinabalu</option>
+                    <option value="BWCC Penampang">BWCC Penampang</option>
+                    <option value="BWCC Miri">BWCC Miri</option>
+                    <option value="DCC Haleluyah Kanowit">DCC Haleluyah Kanowit</option>
+                    <option value="BWCC Lawas">BWCC Lawas</option>
+                    <option value="BWCC Kuching">BWCC Kuching</option>
+                    <option value="Misi & Penginjilan">Misi & Penginjilan</option>
+                    <option value="Jabatan Doa Syafaat Nasional">Jabatan Doa Syafaat Nasional</option>
+                    <option value="Lain-lain">Lain-lain (Sila Nyatakan)</option>
+                  </select>
+                  <input type="text" class="form-control mt-2 d-none" id="cawanganLain" placeholder="Sila nyatakan nama cawangan..." name="cawanganLainInput">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">Tarikh Aktiviti</label>
+                  <input type="date" class="form-control" name="tarikh" required>
+                </div>
+              </div>
+              <div class="row">
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Nama Aktiviti</label>
+                  <input type="text" class="form-control" name="namaAktiviti" placeholder="Nama Program/Aktiviti" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Jabatan Pelayanan</label>
+                  <input type="text" class="form-control" name="jabatan" placeholder="Nama Jabatan / Pelayanan" required>
+                </div>
+              </div>
+
+              <div class="section-title">2. Ringkasan & Penilaian</div>
+              <div class="mb-3"><label class="form-label fw-bold">Ringkasan Aktiviti</label><textarea class="form-control" name="ringkasan" rows="3" required></textarea></div>
+              <div class="mb-3"><label class="form-label fw-bold">Kelebihan</label><textarea class="form-control" name="kelebihan" rows="2"></textarea></div>
+              <div class="mb-3"><label class="form-label fw-bold">Kekurangan</label><textarea class="form-control" name="kekurangan" rows="2"></textarea></div>
+              <div class="mb-3"><label class="form-label fw-bold">Penambahbaikan</label><textarea class="form-control" name="penambahbaikan" rows="2"></textarea></div>
+
+              <div class="section-title">3. Rekod Kehadiran</div>
+              <div class="row">
+                <div class="col-md-4 mb-3"><label class="form-label fw-bold">Dewasa</label><input type="number" class="form-control" name="kehadiranDewasa" min="0" value="0" required></div>
+                <div class="col-md-4 mb-3"><label class="form-label fw-bold">Kanak-Kanak</label><input type="number" class="form-control" name="kehadiranKanak" min="0" value="0" required></div>
+                <div class="col-md-4 mb-3"><label class="form-label fw-bold">Kali Pertama</label><input type="number" class="form-control" name="kehadiranPertama" min="0" value="0" required></div>
+              </div>
+
+              <div class="section-title">4. Kewangan (RM)</div>
+              <div class="row">
+                <div class="col-md-6 mb-3"><label class="form-label fw-bold">Belanjawan (RM)</label><input type="number" step="0.01" class="form-control" name="belanjawan" placeholder="0.00"></div>
+                <div class="col-md-6 mb-3"><label class="form-label fw-bold">Perbelanjaan (RM)</label><input type="number" step="0.01" class="form-control" name="perbelanjaan" placeholder="0.00"></div>
+              </div>
+
+              <div class="section-title">5. Gambar & Pengesahan</div>
+              <div class="mb-3"><label class="form-label fw-bold">Gambar Aktiviti (Maksimum 6)</label><input type="file" class="form-control" id="gambarInput" accept="image/*" multiple onchange="hadkanGambar(this)"></div>
+              <div class="mb-4"><label class="form-label fw-bold">Dilaporkan Oleh</label><input type="text" class="form-control" name="dilaporkanOleh" placeholder="Nama anda / Jawatan" required></div>
+
+              <button type="submit" id="btnSubmit" class="btn btn-primary w-100 py-2 fw-bold fs-5">Hantar Laporan</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: DASHBOARD ADMIN -->
+      <div id="dashboardTab" class="tab-content d-none">
+        <div id="loginSection" class="container mt-5" style="max-width: 400px;">
+          <div class="card p-4 shadow-sm text-center border-top border-primary border-4">
+            <h4 class="text-primary mb-2 fw-bold">Log Masuk Admin</h4>
+            <input type="password" id="inputPassword" class="form-control mb-3 text-center" placeholder="Kata Laluan">
+            <button id="btnLogMasuk" class="btn btn-primary w-100 fw-bold" onclick="prosesLogMasuk()">Log Masuk</button>
+            <div id="mesejRalat" class="text-danger mt-3 small fw-bold d-none">Kata laluan tidak sah.</div>
+          </div>
+        </div>
+
+        <div id="dashboardSection" class="container-fluid d-none">
+          <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+            <div><h3 class="text-white fw-bold mb-0">Dashboard Aktiviti</h3><span class="badge bg-dark mt-1" id="labelPeranan">Memuatkan...</span></div>
+          </div>
+
+          <div class="row mb-4" id="ruangKawalanUtama">
+            <div class="col-12"><div class="card p-3 shadow-sm bg-white"><div class="row align-items-end">
+                  <div class="col-md-8" id="ruangFilter"><label class="fw-bold mb-2">Penapis Cawangan:</label><select id="filterCawangan" class="form-select text-center fw-bold" onchange="kemaskiniFilter()"><option value="Semua">Semua Cawangan</option></select></div>
+                  <div class="col-md-4 mt-3 mt-md-0" id="ruangKompilasi"><button class="btn btn-warning w-100 fw-bold" onclick="bukaModalKompilasi()"><i class="fa-solid fa-file-pdf"></i> Jana Kompilasi</button></div>
+            </div></div></div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3"><div class="stat-box bg-blue shadow-sm"><h5>Jumlah Laporan</h5><h2 id="totalLaporan">0</h2></div></div>
+            <div class="col-md-4 mb-3"><div class="stat-box bg-green shadow-sm"><h5>Kehadiran (Semua)</h5><h2 id="totalKehadiran">0</h2></div></div>
+            <div class="col-md-4 mb-3"><div class="stat-box bg-purple shadow-sm"><h5>Perbelanjaan (RM)</h5><h2 id="totalBelanja">0</h2></div></div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3"><div class="card p-3 shadow-sm"><h5 class="text-center">Mengikut Jabatan Pelayanan</h5><canvas id="jabatanChart"></canvas></div></div>
+            <div class="col-md-6 mb-3"><div class="card p-3 shadow-sm"><h5 class="text-center">Trend Perbelanjaan (RM)</h5><canvas id="belanjaChart"></canvas></div></div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-12"><div class="card p-3 shadow-sm"><h5 class="text-primary border-bottom pb-2">Senarai Laporan Aktiviti</h5>
+                <div class="table-responsive"><table class="table table-hover mt-2"><thead class="table-light"><tr><th>ID</th><th>Tarikh</th><th>Nama Aktiviti</th><th>Cawangan</th><th>Status</th><th>Tindakan</th></tr></thead><tbody id="jadualLaporanTbody"></tbody></table></div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP MODALS -->
+  <div class="modal fade" id="modalKompilasi" tabindex="-1">
+    <div class="modal-dialog"><div class="modal-content">
+      <div class="modal-header bg-warning text-dark"><h5 class="modal-title fw-bold"><i class="fa-solid fa-file-pdf"></i> Jana Kompilasi</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body p-4"><div class="mb-3"><label class="fw-bold">Pilih Cawangan</label><select id="kompCawangan" class="form-select"></select></div><div class="mb-3"><label class="fw-bold">Tahun Pelaksanaan</label><select id="kompTahun" class="form-select"></select></div></div>
+      <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button><button type="button" class="btn btn-primary fw-bold" id="btnProsesKompilasi" onclick="laksanakanKompilasi()">Jana & Hantar E-mel</button></div>
+    </div></div>
+  </div>
+
+  <div class="modal fade" id="modalButiran" tabindex="-1">
+    <div class="modal-dialog modal-lg"><div class="modal-content">
+      <div class="modal-header bg-primary text-white"><h5 class="modal-title">Butiran #<span id="modIdLaporan"></span></h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body p-4">
+        <div id="kotakPengesahan" class="alert d-none mb-3 text-center"><h6 class="fw-bold mb-1" id="modTeksStatus">Status</h6><small id="modTeksWaktu"></small></div>
+        <table class="table table-sm table-bordered">
+          <tr><th width="30%" class="bg-light">Nama Aktiviti</th><td id="modAktiviti"></td></tr><tr><th class="bg-light">Cawangan</th><td id="modCawangan"></td></tr>
+          <tr><th class="bg-light">Tarikh</th><td id="modTarikh"></td></tr><tr><th class="bg-light">Jabatan</th><td id="modJabatan"></td></tr><tr><th class="bg-light">Pelapor</th><td id="modPelapor"></td></tr>
+        </table>
+        <h6 class="mt-4 fw-bold text-primary border-bottom pb-1">Ringkasan & Penilaian</h6>
+        <div class="mb-2"><strong>Ringkasan:</strong> <br><span id="modRingkasan" class="text-secondary"></span></div><div class="mb-2"><strong>Kelebihan:</strong> <br><span id="modKelebihan" class="text-secondary"></span></div>
+        <div class="mb-2"><strong>Kekurangan:</strong> <br><span id="modKekurangan" class="text-secondary"></span></div><div class="mb-2"><strong>Penambahbaikan:</strong> <br><span id="modPenambahbaikan" class="text-secondary"></span></div>
+        <h6 class="mt-4 fw-bold text-primary border-bottom pb-1">Kehadiran & Kewangan</h6>
+        <table class="table table-sm table-bordered text-center"><thead class="table-light"><tr><th>Dewasa</th><th>Kanak-Kanak</th><th>Pertama</th><th>Belanjawan</th><th>Perbelanjaan</th></tr></thead><tbody><tr><td id="modDewasa"></td><td id="modKanak"></td><td id="modPertama"></td><td id="modBelanjawan"></td><td id="modPerbelanjaan" class="text-danger fw-bold"></td></tr></tbody></table>
+        <h6 class="mt-4 fw-bold text-primary border-bottom pb-1">Gambar Lampiran</h6><div id="modGambar" class="row g-2 mt-2"></div>
+      </div>
+      <div class="modal-footer justify-content-between"><button type="button" class="btn btn-success fw-bold d-none" id="btnSahkanPopup" onclick="laksanakanPengesahan()"><i class="fa-solid fa-check"></i> Sahkan & Hantar PDF</button><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button></div>
+    </div></div>
+  </div>
+
+  <div class="modal fade" id="modalEdit" tabindex="-1">
+    <div class="modal-dialog modal-lg"><div class="modal-content">
+      <div class="modal-header bg-success text-white"><h5 class="modal-title fw-bold"><i class="fa-solid fa-edit"></i> Kemaskini #<span id="editModId"></span></h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body p-4">
+        <form id="formEditLaporan">
+          <input type="hidden" id="editRow">
+          <div class="row"><div class="col-md-6 mb-3"><label class="fw-bold">Tarikh</label><input type="date" class="form-control" id="editTarikh" required></div><div class="col-md-6 mb-3"><label class="fw-bold">Nama Aktiviti</label><input type="text" class="form-control" id="editAktiviti" required></div></div>
+          <div class="mb-3"><label class="fw-bold">Jabatan</label><input type="text" class="form-control" id="editJabatan" required></div><div class="mb-3"><label class="fw-bold">Ringkasan Aktiviti</label><textarea class="form-control" id="editRingkasan" rows="3" required></textarea></div>
+          <div class="row"><div class="col-md-4 mb-3"><label class="fw-bold">Kelebihan</label><textarea class="form-control" id="editKelebihan" rows="2"></textarea></div><div class="col-md-4 mb-3"><label class="fw-bold">Kekurangan</label><textarea class="form-control" id="editKekurangan" rows="2"></textarea></div><div class="col-md-4 mb-3"><label class="fw-bold">Penambahbaikan</label><textarea class="form-control" id="editPenambahbaikan" rows="2"></textarea></div></div>
+          <div class="row"><div class="col-md-4 mb-3"><label class="fw-bold">Dewasa</label><input type="number" class="form-control" id="editDewasa" required></div><div class="col-md-4 mb-3"><label class="fw-bold">Kanak-Kanak</label><input type="number" class="form-control" id="editKanak" required></div><div class="col-md-4 mb-3"><label class="fw-bold">Kali Pertama</label><input type="number" class="form-control" id="editPertama" required></div></div>
+          <div class="row"><div class="col-md-6 mb-3"><label class="fw-bold">Belanjawan (RM)</label><input type="number" step="0.01" class="form-control" id="editBelanjawan"></div><div class="col-md-6 mb-3"><label class="fw-bold">Perbelanjaan (RM)</label><input type="number" step="0.01" class="form-control" id="editPerbelanjaan"></div></div>
+          <div class="mb-3"><label class="fw-bold">Dilaporkan Oleh</label><input type="text" class="form-control" id="editPelapor" required></div>
+          <div class="alert alert-warning small text-center mb-0">Sistem tidak menyokong pengeditan gambar.</div>
+        </form>
+      </div>
+      <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button><button type="button" class="btn btn-success fw-bold" id="btnSimpanEdit" onclick="simpanKemaskiniLaporan()">Simpan Perubahan</button></div>
+    </div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
